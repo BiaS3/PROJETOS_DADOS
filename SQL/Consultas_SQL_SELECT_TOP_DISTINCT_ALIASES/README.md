@@ -1,27 +1,43 @@
-# Consultas SQL — SELECT, TOP, DISTINCT e ALIAS
+# 🌷 Consultas SQL — SELECT, TOP, DISTINCT e ALIAS
 
-Exercícios práticos desenvolvidos durante os estudos de SQL Server.
+> Exercícios práticos desenvolvidos durante os meus estudos de SQL Server.
 
-## Conteúdos trabalhados
+---
 
-- SELECT
-- Seleção de colunas
-- SELECT TOP
-- TOP e percentuais de registros
-- DISTINCT
-- ALIAS com AS
-- COUNT
-- Consultas em bases de dados
-- Análise de clientes e produtos
+## 📚 Conteúdos trabalhados
 
-## Base de dados
+- 🔎 SELECT
+- 🗂️ Seleção de colunas
+- 🔢 SELECT TOP
+- 📊 TOP e percentuais de registros
+- ✨ DISTINCT
+- 🏷️ ALIAS com AS
+- 🔢 COUNT
+- 🗄️ Consultas em bases de dados
+- 👥 Análise de clientes e produtos
 
-Os exercícios utilizam a base de dados Contoso no SQL Server.
+---
 
-## Exercícios
+## 🗄️ Base de dados
 
-- Exercício 01 — Contagem de produtos e clientes
-- Exercício 02 — Consulta de clientes e datas de nascimento
-- Exercício 03 — Seleção dos primeiros clientes
-- Exercício 04 — Consulta de fornecedores
-- Exercício 05 — Identificação de produtos não vendidos
+Os exercícios utilizam a base de dados **Contoso** no **SQL Server**.
+
+---
+
+## 📝 Exercícios
+
+| # | Exercício | Tema |
+|---|---|---|
+| 01 | Contagem de produtos e clientes | COUNT e consultas |
+| 02 | Clientes e datas de nascimento | SELECT e ALIAS |
+| 03 | Primeiros clientes | TOP e seleção de colunas |
+| 04 | Consulta de fornecedores | SELECT e ALIAS |
+| 05 | Produtos não vendidos | Consultas sobre produtos |
+
+---
+
+## 🌱 Objetivo
+
+Praticar consultas SQL e desenvolver uma base sólida para análise e tratamento de dados.
+
+> ✨ Um exercício de cada vez, construindo minha jornada em SQL.
