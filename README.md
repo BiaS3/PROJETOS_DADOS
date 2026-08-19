@@ -4,6 +4,7 @@ Este repositório centraliza todas as aplicações, scripts e análises desenvol
 
 * 📁 **[Python](./Python/)**: Scripts iniciais, lógica de algoritmos, estruturas de repetição (`while`, `if/else`) e exercícios práticos de programação.
 * 📁 [SQL](./SQL/): Consultas SQL, JOINs, subconsultas, Views, índices e exercícios de bases de dados relacionais.
+* 📁 **[Power BI](./Power%20BI/)**: Estudos de Business Intelligence, tratamento e transformação de dados, modelagem, DAX, visualizações e construção de dashboards.
 
 ---
 
