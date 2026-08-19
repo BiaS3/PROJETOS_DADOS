@@ -9,13 +9,11 @@ Este repositório centraliza todas as aplicações, scripts e análises desenvol
 ---
 
 
-## 🎓 Minha formação
+## 🎓 Minha formação - 📅 **2026 – 2027**
 
 ### 🌷 Gestão de Informação e Ciência de Dados
 **Curso de Especialização — Sabius | Nível 5**
 Formação abrangente em Gestão de Informação, Ciência de Dados e Business Intelligence, com estudos em SQL, Python, modelação de dados, análise exploratória, transformação e visualização de dados, storytelling e projetos práticos.
-
-📅 **2026 – 2027**
 
 ### 💻 Formação complementar
 **Hashtag Treinamentos**
