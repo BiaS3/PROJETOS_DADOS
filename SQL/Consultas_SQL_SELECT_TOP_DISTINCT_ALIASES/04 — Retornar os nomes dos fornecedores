@@ -1,0 +1,10 @@
+-- =====================================================
+-- Exercício 04 - SELECT DISTINCT e ALIAS
+-- =====================================================
+
+-- Retornar os nomes dos fornecedores da tabela DimProduct,
+-- sem repetir fornecedores
+
+SELECT
+    DISTINCT Manufacturer AS Fornecedor
+FROM DimProduct;
