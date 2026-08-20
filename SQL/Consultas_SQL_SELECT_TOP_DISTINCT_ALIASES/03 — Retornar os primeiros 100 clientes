@@ -1,0 +1,30 @@
+-- =====================================================
+-- Exercício 03 - SELECT TOP, TOP PERCENT e ALIAS
+-- =====================================================
+
+-- 3.a) Retornar os primeiros 100 clientes
+-- Selecionando todas as colunas
+
+SELECT
+    TOP (100) *
+FROM DimCustomer;
+
+
+-- 3.b) Retornar 20% dos clientes
+-- Selecionando todas as colunas
+
+SELECT
+    TOP (20) PERCENT *
+FROM DimCustomer;
+
+
+-- 3.c) Retornar os 100 primeiros clientes,
+-- selecionando apenas FirstName, EmailAddress e BirthDate
+-- e renomeando as colunas para português
+
+SELECT
+    TOP (100)
+    FirstName AS Nome,
+    EmailAddress AS E_mail,
+    BirthDate AS Aniversário
+FROM DimCustomer;
