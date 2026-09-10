@@ -10,7 +10,7 @@ O objetivo deste projeto foi praticar a ingestão e organização de dados prove
 
 ## 📊 Dashboard
 
-![Dashboard Comercial](imagens/dashboard-comercial.png)
+### 🌐 [👉 Clica aqui para ver o Dashboard Online](https://bias3.github.io/PROJETOS_DADOS/Power_BI/Ingestao_de_Dados/Dashboard_Comercial_BiaS3.html)
 
 ## 🗂️ Fontes de dados
 
