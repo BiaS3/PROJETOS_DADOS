@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Comercial — Bianca Salgado | GICD 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222637;
+    --border: #2e3347;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --text: #e8eaf0;
+    --muted: #8b91a8;
+    --chart1: #4f8ef7;
+    --chart2: #7c5cfc;
+    --chart3: #22c55e;
+    --chart4: #f59e0b;
+    --chart5: #ef4444;
+    --chart6: #06b6d4;
+  }
+
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 100;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .logo h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  .logo span { color: var(--muted); font-weight: 400; }
+  .header-right { display: flex; align-items: center; gap: 20px; }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+
+  /* FILTERS */
+  .filters {
+    padding: 14px 28px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .filter-label { font-size: 12px; color: var(--muted); margin-right: 4px; }
+  .year-btn {
+    padding: 5px 14px; border-radius: 6px; border: 1px solid var(--border);
+    background: none; color: var(--muted); font-size: 13px; cursor: pointer;
+    font-family: inherit; transition: all .15s;
+  }
+  .year-btn.active, .year-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .sep { width: 1px; height: 20px; background: var(--border); margin: 0 6px; }
+
+  /* MAIN */
+  main { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
+
+  /* KPI CARDS */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px;
+    position: relative; overflow: hidden;
+  }
+  .kpi::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--kpi-color, var(--accent));
+  }
+  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .kpi-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
+  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* CHART GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px;
+  }
+  .card-title { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; font-weight: 500; }
+  .chart-wrap { position: relative; }
+
+  /* BAR HORIZONTAL */
+  .hbar-list { display: flex; flex-direction: column; gap: 10px; }
+  .hbar-item { }
+  .hbar-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .hbar-name { font-size: 12px; color: var(--text); }
+  .hbar-val { font-size: 12px; color: var(--muted); }
+  .hbar-track { height: 6px; background: var(--border); border-radius: 3px; }
+  .hbar-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
+
+  /* DONUT LEGEND */
+  .donut-wrap { display: flex; align-items: center; gap: 24px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* COUNTRY BARS */
+  .country-list { display: flex; flex-direction: column; gap: 8px; }
+  .country-row { display: flex; align-items: center; gap: 10px; }
+  .country-name { font-size: 12px; color: var(--text); width: 120px; flex-shrink: 0; }
+  .country-track { flex: 1; height: 5px; background: var(--border); border-radius: 3px; }
+  .country-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+  .country-val { font-size: 11px; color: var(--muted); width: 70px; text-align: right; flex-shrink: 0; }
+
+  /* FOOTER */
+  footer { text-align: center; padding: 24px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 24px; }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 900px) {
+    .kpis { grid-template-columns: repeat(2,1fr); }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <h1>Dashboard Comercial <span>/ Vendas 2022–2025</span></h1>
+  </div>
+  <div class="header-right">
+    <span class="badge">UFCD 10798 · Ingestão de Dados</span>
+    <span class="badge">Power BI → HTML</span>
+  </div>
+</header>
+
+<div class="filters">
+  <span class="filter-label">Filtrar por ano:</span>
+  <button class="year-btn active" onclick="filtrar('todos')">Todos</button>
+  <button class="year-btn" onclick="filtrar(2022)">2022</button>
+  <button class="year-btn" onclick="filtrar(2023)">2023</button>
+  <button class="year-btn" onclick="filtrar(2024)">2024</button>
+  <button class="year-btn" onclick="filtrar(2025)">2025</button>
+</div>
+
+<main>
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi" style="--kpi-color:#4f8ef7">
+      <div class="kpi-label">Faturação Total</div>
+      <div class="kpi-value" id="kpi-fat">R$ 651Mi</div>
+      <div class="kpi-sub" id="kpi-fat-sub">2022 a 2025</div>
+    </div>
+    <div class="kpi" style="--kpi-color:#22c55e">
+      <div class="kpi-label">Qtd. Produtos Vendidos</div>
+      <div class="kpi-value" id="kpi-qtd">2,53Mi</div>
+      <div class="kpi-sub">unidades</div>
+    </div>
+    <div class="kpi" style="--kpi-color:#f59e0b">
+      <div class="kpi-label">Preço Médio</div>
+      <div class="kpi-value" id="kpi-preco">R$ 244,76</div>
+      <div class="kpi-sub">por produto</div>
+    </div>
+    <div class="kpi" style="--kpi-color:#7c5cfc">
+      <div class="kpi-label">Total de Clientes</div>
+      <div class="kpi-value" id="kpi-cli">18.484</div>
+      <div class="kpi-sub">clientes únicos</div>
+    </div>
+  </div>
+
+  <!-- Linha 1: gráfico temporal + donut género -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Faturação por Ano e Trimestre</div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="chartTrim"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Faturação por Género</div>
+      <div class="donut-wrap" style="height:220px; display:flex; align-items:center; justify-content:center; gap:30px;">
+        <div style="width:160px; height:160px; position:relative; flex-shrink:0;">
+          <canvas id="chartGenero"></canvas>
+        </div>
+        <div class="donut-legend" id="legendGenero"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linha 2: marcas + categorias + países -->
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">Faturação por Marca (Top 6)</div>
+      <div class="chart-wrap" style="height:180px">
+        <canvas id="chartMarca"></canvas>
+      </div>
+      <div id="legendaMarcas" style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Por Categoria</div>
+      <div class="hbar-list" id="catBars" style="margin-top:4px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Top Países</div>
+      <div class="country-list" id="paisBars" style="margin-top:4px;"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Projeto de portfólio · UFCD 10798 — Ingestão de Dados · Curso de Especialização em Gestão de Informação e Ciência de Dados 2026 ·
+  <a href="https://github.com/BiaS3" target="_blank">github.com/BiaS3</a>
+</footer>
+
+<script>
+const DADOS = {"totais": {"faturacao": 651254848.71, "qtd": 2529097, "clientes": 18484, "preco_medio": 244.76}, "por_ano": [{"Ano": 2022, "faturacao": 64626922.98, "qtd_vendida": 371119, "n_clientes": 17580, "preco_medio": 174.59}, {"Ano": 2023, "faturacao": 245360383.35, "qtd_vendida": 855330, "n_clientes": 18483, "preco_medio": 287.03}, {"Ano": 2024, "faturacao": 238419595.54, "qtd_vendida": 890819, "n_clientes": 18483, "preco_medio": 267.74}, {"Ano": 2025, "faturacao": 102847946.84, "qtd_vendida": 411829, "n_clientes": 18364, "preco_medio": 249.64}], "por_trimestre": [{"Ano": 2022, "Trimestre": 1, "Valor Total": 14422852.17}, {"Ano": 2022, "Trimestre": 2, "Valor Total": 18931202.97}, {"Ano": 2022, "Trimestre": 3, "Valor Total": 16483803.31}, {"Ano": 2022, "Trimestre": 4, "Valor Total": 14789064.53}, {"Ano": 2023, "Trimestre": 1, "Valor Total": 69296947.22}, {"Ano": 2023, "Trimestre": 2, "Valor Total": 66719678.81}, {"Ano": 2023, "Trimestre": 3, "Valor Total": 57142388.12}, {"Ano": 2023, "Trimestre": 4, "Valor Total": 52201369.2}, {"Ano": 2024, "Trimestre": 1, "Valor Total": 56289720.44}, {"Ano": 2024, "Trimestre": 2, "Valor Total": 70232487.67}, {"Ano": 2024, "Trimestre": 3, "Valor Total": 66487203.23}, {"Ano": 2024, "Trimestre": 4, "Valor Total": 45410184.2}, {"Ano": 2025, "Trimestre": 1, "Valor Total": 102847946.84}], "por_marca": [{"Marca": "Contoso", "Valor Total": 237642531.92}, {"Marca": "Northwind Traders", "Valor Total": 119964290.13}, {"Marca": "Litware", "Valor Total": 116964821.39}, {"Marca": "Tailspin Toys", "Valor Total": 81679061.85}, {"Marca": "Southridge Video", "Valor Total": 60144713.34}, {"Marca": "Fabrikam", "Valor Total": 9729986.34}], "por_categoria": [{"ID_categoria": "CAT3", "Valor Total": 323804194.88, "Categoria": "Eletrodomésticos"}, {"ID_categoria": "CAT2", "Valor Total": 128207549.41, "Categoria": "TV e Vídeo"}, {"ID_categoria": "CAT8", "Valor Total": 104538800.94, "Categoria": "Jogos/Brinquedos"}, {"ID_categoria": "CAT1", "Valor Total": 64640461.9, "Categoria": "Câmeras"}, {"ID_categoria": "CAT6", "Valor Total": 12341073.78, "Categoria": "Áudio"}, {"ID_categoria": "CAT4", "Valor Total": 12137883.8, "Categoria": "Computadores"}, {"ID_categoria": "CAT5", "Valor Total": 3199750.34, "Categoria": "Telemóveis"}, {"ID_categoria": "CAT7", "Valor Total": 2385133.66, "Categoria": "Música/Filmes"}], "por_genero": [{"Genero": "F", "Valor Total": 360114145.52, "pct": 55.3}, {"Genero": "M", "Valor Total": 291140703.19, "pct": 44.7}], "por_pais": [{"Pais": "Estados Unidos", "Valor Total": 355922262.08}, {"Pais": "Inglaterra", "Valor Total": 55833043.6}, {"Pais": "Alemanha", "Valor Total": 52344281.29}, {"Pais": "França", "Valor Total": 51022900.77}, {"Pais": "Austrália", "Valor Total": 50361112.6}, {"Pais": "Canada", "Valor Total": 26360233.37}, {"Pais": "Japão", "Valor Total": 8975517.83}, {"Pais": "China", "Valor Total": 6604634.94}]};
+
+let anoAtivo = 'todos';
+
+// ---- utilitários ----
+function fmtMi(v) {
+  if (v >= 1e6) return 'R$ ' + (v/1e6).toFixed(2).replace('.',',') + 'Mi';
+  return 'R$ ' + (v/1e3).toFixed(0) + 'Mil';
+}
+function fmtN(v) {
+  return v.toLocaleString('pt-BR');
+}
+
+function dadosFiltrados() {
+  if (anoAtivo === 'todos') return DADOS;
+  const ano = +anoAtivo;
+  const r = DADOS.por_ano.find(a => a.Ano === ano) || {};
+  return {
+    totais: {
+      faturacao: r.faturacao || 0,
+      qtd: r.qtd_vendida || 0,
+      clientes: r.n_clientes || 0,
+      preco_medio: r.preco_medio || 0,
+    },
+    por_trimestre: DADOS.por_trimestre.filter(t => t.Ano === ano),
+    por_marca: DADOS.por_marca_ano ? DADOS.por_marca_ano[ano] : DADOS.por_marca,
+    por_categoria: DADOS.por_categoria,
+    por_genero: DADOS.por_genero,
+    por_pais: DADOS.por_pais,
+  };
+}
+
+// ---- KPIs ----
+function renderKPIs(d) {
+  document.getElementById('kpi-fat').textContent = fmtMi(d.totais.faturacao);
+  document.getElementById('kpi-fat-sub').textContent = anoAtivo === 'todos' ? '2022 a 2025' : String(anoAtivo);
+  document.getElementById('kpi-qtd').textContent = fmtN(d.totais.qtd);
+  document.getElementById('kpi-preco').textContent = 'R$ ' + d.totais.preco_medio.toFixed(2).replace('.',',');
+  document.getElementById('kpi-cli').textContent = fmtN(d.totais.clientes);
+}
+
+// ---- Gráfico trimestre (bar agrupado) ----
+let chartTrim;
+function renderTrim(d) {
+  const trims = anoAtivo === 'todos'
+    ? [2022,2023,2024,2025].map(ano =>
+        [1,2,3,4].map(q => {
+          const r = DADOS.por_trimestre.find(t => t.Ano===ano && t.Trimestre===q);
+          return r ? +(r['Valor Total']/1e6).toFixed(2) : 0;
+        })
+      )
+    : [[1,2,3,4].map(q => {
+        const r = d.por_trimestre.find(t => t.Trimestre===q);
+        return r ? +(r['Valor Total']/1e6).toFixed(2) : 0;
+      })];
+
+  const labels = anoAtivo === 'todos'
+    ? ['Q1','Q2','Q3','Q4']
+    : ['Q1','Q2','Q3','Q4'];
+
+  const colors = ['#4f8ef7','#7c5cfc','#22c55e','#f59e0b'];
+  const anos = anoAtivo === 'todos' ? [2022,2023,2024,2025] : [+anoAtivo];
+
+  const datasets = anos.map((ano,i) => ({
+    label: String(ano),
+    data: trims[i],
+    backgroundColor: colors[i],
+    borderRadius: 4,
+    borderSkipped: false,
+  }));
+
+  if (chartTrim) chartTrim.destroy();
+  chartTrim = new Chart(document.getElementById('chartTrim'), {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color:'#8b91a8', font:{size:11} } } },
+      scales: {
+        x: { ticks:{color:'#8b91a8'}, grid:{color:'#2e3347'} },
+        y: { ticks:{color:'#8b91a8', callback:v=>v+'Mi'}, grid:{color:'#2e3347'} }
+      }
+    }
+  });
+}
+
+// ---- Género donut ----
+let chartGen;
+function renderGenero(d) {
+  const gen = DADOS.por_genero;
+  const total = gen.reduce((s,g)=>s+g['Valor Total'],0);
+  const labels = gen.map(g => g.Genero === 'F' ? 'Feminino' : 'Masculino');
+  const vals = gen.map(g => +(g['Valor Total']/1e6).toFixed(2));
+  const pcts = gen.map(g => (g['Valor Total']/total*100).toFixed(1));
+  const cols = ['#4f8ef7','#7c5cfc'];
+
+  if (chartGen) chartGen.destroy();
+  chartGen = new Chart(document.getElementById('chartGenero'), {
+    type:'doughnut',
+    data:{ labels, datasets:[{ data:vals, backgroundColor:cols, borderWidth:0, hoverOffset:4 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'72%',
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ` ${ctx.label}: ${fmtMi(ctx.raw*1e6)}` } } }
+    }
+  });
+
+  const leg = document.getElementById('legendGenero');
+  leg.innerHTML = labels.map((l,i)=>`
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${cols[i]}"></div>
+      <div>
+        <div style="font-size:13px;font-weight:500;">${l}</div>
+        <div style="font-size:11px;color:#8b91a8">${pcts[i]}%</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---- Marcas bar horizontal ----
+// Cores fixas por marca — completamente distintas das cores dos anos
+const MARCA_CORES = {
+  'Contoso':          '#f97316',  // laranja
+  'Northwind Traders':'#a855f7',  // violeta
+  'Litware':          '#10b981',  // esmeralda
+  'Tailspin Toys':    '#e11d48',  // vermelho rosa
+  'Southridge Video': '#0ea5e9',  // azul céu
+  'Fabrikam':         '#eab308',  // amarelo
+  'Adventure Works':  '#14b8a6',  // teal
+  'The Phone Company':'#f43f5e',  // rosa
+  'Proseware':        '#8b5cf6',  // roxo
+  'Wide World Importers': '#84cc16', // lima
+};
+
+let chartMarca;
+function renderMarca(d) {
+  const marcas = DADOS.por_marca;
+  const labels = marcas.map(m=>m['Marca']);
+  const vals = marcas.map(m=>+(m['Valor Total']/1e6).toFixed(2));
+  const cols = marcas.map(m => MARCA_CORES[m['Marca'].trim()] || '#94a3b8');
+
+  if (chartMarca) chartMarca.destroy();
+  chartMarca = new Chart(document.getElementById('chartMarca'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{
+        data: vals,
+        backgroundColor: cols,
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ display:false },
+        tooltip:{
+          callbacks:{
+            label: ctx => ` ${fmtMi(ctx.raw*1e6)}`,
+            labelColor: ctx => ({ borderColor: cols[ctx.dataIndex], backgroundColor: cols[ctx.dataIndex] })
+          }
+        }
+      },
+      scales:{
+        x:{ ticks:{color:'#8b91a8', callback:v=>v+'Mi'}, grid:{color:'#2e3347'} },
+        y:{ ticks:{color:'#e8eaf0', font:{size:11}}, grid:{display:false} }
+      }
+    }
+  });
+
+  // Legenda manual de cores por marca
+  const leg = document.getElementById('legendaMarcas');
+  if (leg) {
+    leg.innerHTML = marcas.map((m,i)=>`
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#8b91a8;">
+        <div style="width:10px;height:10px;border-radius:2px;background:${cols[i]};flex-shrink:0;"></div>
+        ${m['Marca']}
+      </div>
+    `).join('');
+  }
+}
+
+// ---- Categorias barras ----
+function renderCat() {
+  const cats = DADOS.por_categoria;
+  const max = cats[0]['Valor Total'];
+  const cols = ['#4f8ef7','#7c5cfc','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#84cc16'];
+  document.getElementById('catBars').innerHTML = cats.slice(0,6).map((c,i)=>`
+    <div class="hbar-item">
+      <div class="hbar-header">
+        <span class="hbar-name">${c['Categoria']}</span>
+        <span class="hbar-val">${fmtMi(c['Valor Total'])}</span>
+      </div>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${(c['Valor Total']/max*100).toFixed(1)}%;background:${cols[i]}"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---- Países ----
+function renderPais() {
+  const paises = DADOS.por_pais;
+  const max = paises[0]['Valor Total'];
+  document.getElementById('paisBars').innerHTML = paises.map(p=>`
+    <div class="country-row">
+      <span class="country-name">${p['Pais']}</span>
+      <div class="country-track"><div class="country-fill" style="width:${(p['Valor Total']/max*100).toFixed(1)}%"></div></div>
+      <span class="country-val">${fmtMi(p['Valor Total'])}</span>
+    </div>
+  `).join('');
+}
+
+// ---- FILTRO ----
+function filtrar(ano) {
+  anoAtivo = ano;
+  document.querySelectorAll('.year-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === (ano === 'todos' ? 'Todos' : String(ano)));
+  });
+  const d = dadosFiltrados();
+  renderKPIs(d);
+  renderTrim(d);
+}
+
+// ---- INIT ----
+const d = dadosFiltrados();
+renderKPIs(d);
+renderTrim(d);
+renderGenero(d);
+renderMarca(d);
+renderCat();
+renderPais();
+</script>
+</body>
+</html>
